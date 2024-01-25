@@ -1,43 +1,47 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/b2e151dc2c704172921d41d5faab1f3d)](https://app.codacy.com/gh/TonyWTillet/snow-tricks/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 # CONTEXTE
-Projet 6 de mon parcours Développeur d'application PHP/Symfony chez OpenClassrooms.
-Création d'un Porfolio via une architecture MVC Orienté objet.
-
+Projet 7 de mon parcours Développeur d'application PHP/Symfony chez OpenClassrooms.
+BileMo permet de fournir à toutes les plateformes qui le souhaitent l’accès a un catalogue de téléphones mobiles via une API (Application Programming Interface).
 ## Project summary
-Jimmy Sweat est un entrepreneur ambitieux passionné de snowboard. Son objectif est la création d'un site collaboratif pour faire connaître ce sport auprès du grand public et aider à l'apprentissage des figures (tricks).
-Il souhaite capitaliser sur du contenu apporté par les internautes afin de développer un contenu riche et suscitant l’intérêt des utilisateurs du site. Par la suite, Jimmy souhaite développer un business de mise en relation avec les marques de snowboard grâce au trafic que le contenu aura généré.
-Pour ce projet, nous allons nous concentrer sur la création technique du site pour Jimmy.
+**BileMo** est une entreprise offrant toute une sélection de téléphones mobiles haut de gamme.
+
+Vous êtes en charge du développement de la vitrine de téléphones mobiles de l’entreprise *BileMo*. Le business modèle de *BileMo* n’est pas de vendre directement ses produits sur le site web, mais de fournir à toutes les plateformes qui le souhaitent l’accès au catalogue via une API (Application Programming Interface). Il s’agit donc de vente exclusivement en B2B (business to business).
+
+Il va falloir que vous exposiez un certain nombre d’API pour que les applications des autres plateformes web puissent effectuer des opérations.
 
 ## Project needs
-Vous êtes chargé de développer le site répondant aux besoins de Jimmy. Vous devez ainsi implémenter les fonctionnalités suivantes : 
+Le premier client a enfin signé un contrat de partenariat avec BileMo ! C’est le branle-bas de combat pour répondre aux besoins de ce premier client qui va permettre de mettre en place l’ensemble des API et de les éprouver tout de suite.
 
-- un annuaire des figures de snowboard. Vous pouvez vous inspirer de la liste des figures sur Wikipédia. Contentez-vous d'intégrer 10 figures, le reste sera saisi par les internautes ;
-- la gestion des figures (création, modification, consultation) ;
-- un espace de discussion commun à toutes les figures.
+Après une réunion dense avec le client, il a été identifié un certain nombre d’informations. Il doit être possible de :
 
-Pour implémenter ces fonctionnalités, vous devez créer les pages suivantes :
-- la page d’accueil où figurera la liste des figures ; 
-- la page de création d'une nouvelle figure ;
-- la page de modification d'une figure ;
-- la page de présentation d’une figure (contenant l’espace de discussion commun autour d’une figure).
+- consulter la liste des produits BileMo ;
+- consulter les détails d’un produit BileMo ;
+- consulter la liste des utilisateurs inscrits liés à un client sur le site web ;
+- consulter le détail d’un utilisateur inscrit lié à un client ;
+- ajouter un nouvel utilisateur lié à un client ;
+- supprimer un utilisateur ajouté par un client.
+
+Seuls les clients référencés peuvent accéder aux API. Les clients de l’API doivent être authentifiés via OAuth ou JWT.
+
+Vous avez le choix entre mettre en place un serveur OAuth et y faire appel (en utilisant le [FOSOAuthServerBundle](https://packagist.org/packages/friendsofsymfony/oauth-server-bundle)), et utiliser Facebook, Google ou LinkedIn. Si vous décidez d’utiliser JWT, il vous faudra [vérifier la validité du token](https://github.com/lexik/LexikJWTAuthenticationBundle) ; l’usage d’une librairie est autorisé.
 
 ## Deliverables
-Un lien vers l’ensemble du projet (fichiers PHP/HTML/JS/CSS…) sur un repository GitHub.
-L’ensemble des diagrammes demandés (modèles de données, classes, use cases, séquentiels).
-Les issues sur le repository GitHub.
-Les instructions pour installer le projet (dans un fichier README à la racine du projet).
-Jeu de données initiales avec l’ensemble des figures de snowboard.
-Lien vers les analyses SensioLabsInsight, Codacy ou Codeclimate (via une médaille dans le README, par exemple).
+1. Un fichier au format TXT contenant **un lien vers un repository Github** contenant l’ensemble du projet :
+    - Tout le code nécessaire (fichiers PHP/HTML/JS/CSS) ;
+    - Un fichier README à la racine du dossier et contenant les instructions pour installer le projet ;
+    - Un dossier contenant l’ensemble des diagrammes demandés (modèles de données, classes, séquentiels)
+    - Les issues sur le repository GitHub que vous aurez créé
+2. Un fichier au format TXT contenant un lien vers **la documentation technique de l’API** à destination des futurs utilisateurs.
 
-# HOW INSTALL THIS PROJECT 
+# HOW INSTALL THIS PROJECT
 
 ## Template
 - Demo : https://www.tailwindawesome.com/resources/stablo/demo
-- Git : https://github.com/web3templates/stablo
+- Git : https://github.com/TonyWTillet/bilemo
 
 ## Required and technical environment
-> Language => PHP 8.1.*
+> Language => PHP 8.3.*
 
 > Database => MySQL 5.7.25
 
@@ -51,35 +55,24 @@ Lien vers les analyses SensioLabsInsight, Codacy ou Codeclimate (via une médail
 
 
 ## Step 1: clone the projet
-    git clone https://github.com/TonyWTillet/snow-tricks.git
+    git clone https://github.com/TonyWTillet/bilemo.git
 
 ## Step 2: install composer
 https://getcomposer.org/download/
 
-## Step 3: download back dependencies 
-    composer install
+## Step 3: install Makefile
+    https://gnuwin32.sourceforge.net/packages/make.htm
 
-## Step 4: webpack encore
-    npm install
+## Step 4: config .env
 
-## Step 5: config .env
+## Step 5: install dependencies
+    make init
 
-## Step 6: create DB
-    php bin/console d:d:c
+## Step 6: install database
+    make database-init
 
-## Step 7: update schema (create tables)
-    php bin/console d:s:u -f
-    OR
-    php bin/console make:migration
-    php bin/console doctrine:migrations:migrate
-
-## Step 8: load fixtures
-> Avant de lancer une fixtures vérifier bien que les images sont dans le dossiers DataFixtures/img. Sinon, Déplacer les images qui sont dans le dossier DataFixtures/img-Save vers DataFixtures/img.
-
-    php bin/console do:fi:lo  
-
-## Step 9: start server
-    symfony serve
+## Step 7: start server
+    symfony server:start
 
 ## Step 10: default user
 <table>
@@ -104,11 +97,5 @@ https://getcomposer.org/download/
     </tbody>
 </table>
 
-## Step 11: Security in Production
-> Htacces
-
-> Generate new keygen for APP_SECRET:
-Randomkeygen.com
-
 # UML DIAGRAMM
-<a href="public/diagrammes">click here</a>
+<a href="public/diagrams">click here</a>
