@@ -86,16 +86,16 @@ https://getcomposer.org/download/
     <tbody>
         <tr>
             <td>user@gmail.com</td>
-            <td align="center">openclassrooms-P6</td>
+            <td align="center">openclassrooms-P7</td>
             <td align="right">ROLE_USER</td>
         </tr>
         <tr>
             <td>admin@gmail.com</td>
-            <td align="center">openclassrooms-P6</td>
+            <td align="center">openclassrooms-P7</td>
             <td align="right">ROLE_ADMIN</td>
         </tr>
     </tbody>
 </table>
 
 # UML DIAGRAMM
-<a href="public/diagrams">click here</a>
+[Diagrammes UML](doagrams_UML/)
