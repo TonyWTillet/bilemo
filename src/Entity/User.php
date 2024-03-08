@@ -19,6 +19,7 @@ class User
 
     #[ORM\ManyToOne(inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?Customer $customer = null;
 
     #[ORM\Column(length: 255)]
@@ -32,6 +33,16 @@ class User
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $phone = null;
+
+    #[ORM\Column]
+    private ?\DateTime $created_at = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $updated_at = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $deleted_at = null;
+
 
     public function getId(): ?int
     {
@@ -94,6 +105,42 @@ class User
     public function setPhone(?string $phone): static
     {
         $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTime
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTime $created_at): static
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTime
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(?\DateTime $updated_at): static
+    {
+        $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function getDeletedAt(): ?\DateTime
+    {
+        return $this->deleted_at;
+    }
+
+    public function setDeletedAt(?\DateTime $deleted_at): static
+    {
+        $this->deleted_at = $deleted_at;
 
         return $this;
     }
