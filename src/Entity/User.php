@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -14,6 +15,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use mysql_xdevapi\CollectionFind;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -23,23 +25,38 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
-
     operations: [
         new GetCollection(
             uriTemplate: '/customers/{customerId}/users',
             uriVariables: [
                 'customerId' => new Link(toProperty: 'customer', fromClass: Customer::class),
             ],
+            normalizationContext: ['groups' => ['user:read:collection']],
             security: "is_granted('ROLE_ADMIN') or request.attributes.get('customerId') == user.getId()",
-            securityMessage: "Access denied."
+            securityMessage: "Wrong customer access denied. Only admins can see all users. Please provide your customer id.",
         ),
-        new Get(security: "is_granted('ROLE_ADMIN') or object == user"),
-        new Post(validationContext: ['groups' => ['Default', 'user:create']]),
-        new Put(),
-        new Delete(),
+        new Get(
+            normalizationContext: ['groups' => ['user:read', 'customer:read']],
+            security: "is_granted('ROLE_ADMIN') or object.getCustomer() == user",
+            securityMessage: "Access denied. Only owners can see their user."
+        ),
+        new Post(
+            denormalizationContext: ['groups' => ['user:write']],
+            security: "is_granted('ROLE_ADMIN') or object.getCustomer() == user",
+            securityMessage: "Access denied. Only owners can create their user.",
+            validationContext: ['groups' => ['Default', 'user:write']]
+        ),
+        new Put(
+            denormalizationContext: ['groups' => ['user:write']],
+            security: "is_granted('ROLE_ADMIN') or object.getCustomer() == user",
+            securityMessage: "Access denied. Only owners can update their user.",
+            validationContext: ['groups' => ['Default', 'user:write']]
+        ),
+        new Delete(
+            security: "is_granted('ROLE_ADMIN') or object.getCustomer() == user",
+            securityMessage: "Access denied. Only owners can delete their user."
+        ),
     ],
-    normalizationContext: ['groups' => ['user:read']],
-    denormalizationContext: ['groups' => ['user:create', 'user:update']],
     paginationClientEnabled: true,
 )]
 
@@ -51,46 +68,39 @@ class User
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read:collection','user:read'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'users')]
-    #[ORM\JoinColumn(nullable: false)]
-    #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[Groups(['user:read'])]
+    #[ORM\JoinColumn(name: "customer_id", referencedColumnName: "id", nullable: false, onDelete: "CASCADE")]
+    #[Groups(['user:read:collection', 'user:read'])]
+    #[ApiProperty(readableLink: false, writableLink: false)]
     private ?Customer $customer = null;
 
     #[Assert\NotBlank]
     #[ORM\Column(length: 255)]
-    #[Groups(['user:read', 'user:create', 'user:update'])]
+    #[Groups(['user:read', 'user:write'])]
     private ?string $firstname = null;
 
     #[Assert\NotBlank]
     #[ORM\Column(length: 255)]
-    #[Groups(['user:read', 'user:create', 'user:update'])]
+    #[Groups(['user:read', 'user:write'])]
     private ?string $lastname = null;
 
     #[Assert\NotBlank]
     #[Assert\Email]
-    #[Groups(['user:read', 'user:create', 'user:update'])]
+    #[Groups(['user:read:collection','user:read', 'user:write'])]
     #[ORM\Column(length: 255, unique: true)]
     private ?string $email = null;
 
-    #[Groups(['user:read', 'user:create', 'user:update'])]
+    #[Groups(['user:read', 'user:write'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $phone = null;
 
-    #[ORM\Column]
-    #[Groups(['user:read', 'user:create'])]
-    private ?\DateTime $created_at = null;
-
-    #[Groups(['user:read','user:update'])]
-    #[ORM\Column(nullable: true)]
-    private ?\DateTime $updated_at = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTime $deleted_at = null;
-
+    public function __construct()
+    {
+        $this->customer = $this->getCustomer();
+    }
 
     public function getId(): ?int
     {
@@ -157,39 +167,5 @@ class User
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTime
-    {
-        return $this->created_at;
-    }
 
-    public function setCreatedAt(\DateTime $created_at): static
-    {
-        $this->created_at = $created_at;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTime
-    {
-        return $this->updated_at;
-    }
-
-    public function setUpdatedAt(?\DateTime $updated_at): static
-    {
-        $this->updated_at = $updated_at;
-
-        return $this;
-    }
-
-    public function getDeletedAt(): ?\DateTime
-    {
-        return $this->deleted_at;
-    }
-
-    public function setDeletedAt(?\DateTime $deleted_at): static
-    {
-        $this->deleted_at = $deleted_at;
-
-        return $this;
-    }
 }

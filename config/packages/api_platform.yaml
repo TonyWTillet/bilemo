@@ -7,8 +7,6 @@ api_platform:
         jsonld: ['application/ld+json']
         jsonopenapi: ['application/vnd.openapi+json']
         html: ['text/html']
-    eager_loading:
-        fetch_partial: true
     defaults:
         pagination_items_per_page: 20
         pagination_maximum_items_per_page: 20
