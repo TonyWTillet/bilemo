@@ -9,6 +9,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use phpDocumentor\Reflection\Types\Object_;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
@@ -50,15 +51,21 @@ class AppFixtures extends Fixture
         "7.2 pouces",
         "7.5 pouces"
     );
-
+    private UserPasswordHasherInterface $userPasswordHasher;
+    public function __construct(UserPasswordHasherInterface $userPasswordHasher)
+    {
+        $this->userPasswordHasher = $userPasswordHasher;
+    }
     public function load(ObjectManager $manager): void
     {
+
         $faker = Factory::create('fr_FR');
         for ($c = 1; $c < self::NUMBER_OF_CUSTOMER; $c++) {
             $customer = new Customer();
             $customer->setName($faker->name);
             $customer->setEmail($faker->email);
-            $customer->setPassword(password_hash('customer'.$c, PASSWORD_DEFAULT));
+            $customer->setPassword($this->userPasswordHasher->hashPassword($customer, 'password'));
+            $customer->setRoles(['ROLE_USER']);
             $manager->persist($customer);
             $this->addReference($c, $customer);
             $customers[] = $c;
