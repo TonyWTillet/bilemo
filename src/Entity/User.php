@@ -2,10 +2,13 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
@@ -20,16 +23,27 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
+
     operations: [
-        new GetCollection(),
+        new GetCollection(
+            uriTemplate: '/customers/{customerId}/users',
+            uriVariables: [
+                'customerId' => new Link(toProperty: 'customer', fromClass: Customer::class),
+            ],
+            security: "is_granted('ROLE_ADMIN') or request.attributes.get('customerId') == user.getId()",
+            securityMessage: "Access denied."
+        ),
+        new Get(security: "is_granted('ROLE_ADMIN') or object == user"),
         new Post(validationContext: ['groups' => ['Default', 'user:create']]),
-        new Get(),
         new Put(),
         new Delete(),
     ],
     normalizationContext: ['groups' => ['user:read']],
     denormalizationContext: ['groups' => ['user:create', 'user:update']],
+    paginationClientEnabled: true,
 )]
+
+#[ApiFilter(SearchFilter::class, properties: ['id' => 'exact', 'email' => 'partial', 'firstname' => 'partial', 'lastname' => 'partial'])]
 #[Broadcast]
 #[UniqueEntity('email')]
 class User
@@ -43,6 +57,7 @@ class User
     #[ORM\ManyToOne(inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[Groups(['user:read'])]
     private ?Customer $customer = null;
 
     #[Assert\NotBlank]
@@ -61,12 +76,15 @@ class User
     #[ORM\Column(length: 255, unique: true)]
     private ?string $email = null;
 
+    #[Groups(['user:read', 'user:create', 'user:update'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $phone = null;
 
     #[ORM\Column]
+    #[Groups(['user:read', 'user:create'])]
     private ?\DateTime $created_at = null;
 
+    #[Groups(['user:read','user:update'])]
     #[ORM\Column(nullable: true)]
     private ?\DateTime $updated_at = null;
 
@@ -79,7 +97,7 @@ class User
         return $this->id;
     }
 
-    public function getCustomerId(): ?Customer
+    public function getCustomer(): ?Customer
     {
         return $this->customer;
     }
