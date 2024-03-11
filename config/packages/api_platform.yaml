@@ -1,5 +1,5 @@
 api_platform:
-    title: Hello API Platform
+    title: BileMo API
     version: 1.0.0
     formats:
         jsonld: ['application/ld+json']
@@ -7,7 +7,11 @@ api_platform:
         jsonld: ['application/ld+json']
         jsonopenapi: ['application/vnd.openapi+json']
         html: ['text/html']
+    eager_loading:
+        fetch_partial: true
     defaults:
+        pagination_items_per_page: 20
+        pagination_maximum_items_per_page: 20
         stateless: true
         cache_headers:
             vary: ['Content-Type', 'Authorization', 'Origin']

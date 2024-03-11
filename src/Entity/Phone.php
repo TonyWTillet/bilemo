@@ -9,7 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 
 #[ORM\Entity(repositoryClass: PhoneRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    paginationClientEnabled: true,
+)]
 #[Broadcast]
 class Phone
 {
