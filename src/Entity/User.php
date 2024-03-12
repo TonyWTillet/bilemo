@@ -27,29 +27,15 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     operations: [
         new GetCollection(
-            uriTemplate: '/customers/{customerId}/users',
-            uriVariables: [
-                'customerId' => new Link(toProperty: 'customer', fromClass: Customer::class),
-            ],
             normalizationContext: ['groups' => ['user:read:collection']],
-            security: "is_granted('ROLE_ADMIN') or request.attributes.get('customerId') == user.getId()",
-            securityMessage: "Wrong customer access denied. Only admins can see all users. Please provide your customer id.",
         ),
         new Get(
             normalizationContext: ['groups' => ['user:read', 'customer:read']],
-            security: "is_granted('ROLE_ADMIN') or object.getCustomer() == user",
-            securityMessage: "Access denied. Only owners can see their user."
         ),
         new Post(
-            denormalizationContext: ['groups' => ['user:write']],
-            security: "is_granted('ROLE_ADMIN') or object.getCustomer() == user",
-            securityMessage: "Access denied. Only owners can create their user.",
             validationContext: ['groups' => ['Default', 'user:write']]
         ),
         new Put(
-            denormalizationContext: ['groups' => ['user:write']],
-            security: "is_granted('ROLE_ADMIN') or object.getCustomer() == user",
-            securityMessage: "Access denied. Only owners can update their user.",
             validationContext: ['groups' => ['Default', 'user:write']]
         ),
         new Delete(
@@ -57,13 +43,15 @@ use Symfony\Component\Serializer\Annotation\Groups;
             securityMessage: "Access denied. Only owners can delete their user."
         ),
     ],
+    denormalizationContext: ['groups' => ['user:write']],
     paginationClientEnabled: true,
 )]
 
 #[ApiFilter(SearchFilter::class, properties: ['id' => 'exact', 'email' => 'partial', 'firstname' => 'partial', 'lastname' => 'partial'])]
 #[Broadcast]
 #[UniqueEntity('email')]
-class User
+
+class User implements CustomerOwnedInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -96,11 +84,6 @@ class User
     #[Groups(['user:read', 'user:write'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $phone = null;
-
-    public function __construct()
-    {
-        $this->customer = $this->getCustomer();
-    }
 
     public function getId(): ?int
     {
