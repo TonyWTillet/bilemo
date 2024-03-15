@@ -61,7 +61,7 @@ class User implements CustomerOwnedInterface
 
     #[ORM\ManyToOne(inversedBy: 'users')]
     #[ORM\JoinColumn(name: "customer_id", referencedColumnName: "id", nullable: false, onDelete: "CASCADE")]
-    #[Groups(['user:read:collection', 'user:read'])]
+    #[Groups(['user:read:collection', 'user:read', 'customer:read'])]
     #[ApiProperty(readableLink: false, writableLink: false)]
     private ?Customer $customer = null;
 
