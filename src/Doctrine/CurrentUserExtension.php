@@ -10,6 +10,7 @@ use App\Entity\CustomerOwnedInterface;
 use App\Entity\User;
 use Doctrine\ORM\QueryBuilder;
 use ReflectionClass;
+use ReflectionException;
 use Symfony\Bundle\SecurityBundle\Security;
 
 class CurrentUserExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
@@ -18,7 +19,15 @@ class CurrentUserExtension implements QueryCollectionExtensionInterface, QueryIt
     public function __construct(private Security $security)
     {
     }
-    public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, ?Operation $operation = null, array $context = []): void
+
+    /**
+     * @throws ReflectionException
+     */
+    public function applyToCollection(QueryBuilder $queryBuilder,
+                                      QueryNameGeneratorInterface $queryNameGenerator,
+                                      string $resourceClass,
+                                      ?Operation $operation = null,
+                                      array $context = []): void
     {
         $this->addWhere($resourceClass, $queryBuilder);
 
@@ -30,9 +39,9 @@ class CurrentUserExtension implements QueryCollectionExtensionInterface, QueryIt
     }
 
     /**
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
-    private function addWhere(string $resourceClass, QueryBuilder $queryBuilder)
+    private function addWhere(string $resourceClass, QueryBuilder $queryBuilder): void
     {
         $reflexionClass = new ReflectionClass($resourceClass);
         if ($reflexionClass->implementsInterface(CustomerOwnedInterface::class)) {
