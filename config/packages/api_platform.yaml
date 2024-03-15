@@ -1,6 +1,11 @@
 api_platform:
     title: BileMo API
     version: 1.0.0
+    swagger:
+        api_keys:
+            JWT:
+                name: Authorization
+                type: header
     formats:
         jsonld: ['application/ld+json']
     docs_formats:
@@ -18,3 +23,4 @@ api_platform:
             rfc_7807_compliant_errors: true
     event_listeners_backward_compatibility_layer: false
     keep_legacy_inflector: false
+
