@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -22,19 +23,26 @@ use Symfony\UX\Turbo\Attribute\Broadcast;
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
 #[ApiResource(
     operations: [
-        new GetCollection(security: "is_granted('ROLE_ADMIN')"),
-        new Get(security: "is_granted('ROLE_ADMIN') or object == user"),
+        new GetCollection(
+            security: "is_granted('ROLE_ADMIN')",
+            securityMessage: "Only admins can see all customers.",
+        ),
+        new Get(
+            security: "is_granted('ROLE_ADMIN') or object == user",
+        ),
     ],
-)]#[Broadcast]
+)]
+#[Broadcast]
 class Customer implements UserInterface,  PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[ApiFilter(SearchFilter::class, strategy: "exact")]
+    #[Groups(['customer:read', 'user:read:post', 'user:read:patch', 'user:put', 'user:post'])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180, unique: true)]
+    #[ORM\Column(length: 255, unique: true)]
+    #[Groups(['customer:read'])]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -47,9 +55,11 @@ class Customer implements UserInterface,  PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['customer:read'])]
     private ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: 'customer', targetEntity: User::class, orphanRemoval: true)]
+    #[ApiProperty(readableLink: false, writableLink: false)]
     private Collection $users;
 
     public function __construct()
