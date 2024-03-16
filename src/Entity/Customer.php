@@ -38,7 +38,7 @@ class Customer implements UserInterface,  PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['customer:read'])]
+    #[Groups(['customer:read', 'user:read:post', 'user:read:patch', 'user:put', 'user:post'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255, unique: true)]
