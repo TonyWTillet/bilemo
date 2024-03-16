@@ -44,7 +44,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
             validationContext: ['groups' => ['user:patch']],
         ),
         new Delete(
-            security: "is_granted('ROLE_ADMIN') or object.getCustomer() == user",
             securityMessage: "Access denied. Only owners can delete their user."
         ),
     ],
