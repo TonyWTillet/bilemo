@@ -3,13 +3,28 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
 use App\Repository\PhoneRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 
 #[ORM\Entity(repositoryClass: PhoneRepository::class)]
 #[ApiResource(
+    operations: [
+        new GetCollection(
+            normalizationContext: ['groups' => ['phone:read:collection']],
+        ),
+        new Get(
+            normalizationContext: ['groups' => ['phone:read']],
+        ),
+    ],
+
     paginationClientEnabled: true,
 )]
 #[Broadcast]
@@ -18,24 +33,31 @@ class Phone
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['phone:read:collection', 'phone:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['phone:read:collection', 'phone:read'])]
     private ?string $brand = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['phone:read:collection', 'phone:read'])]
     private ?string $model = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
+    #[Groups(['phone:read'])]
     private ?string $price = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['phone:read'])]
     private ?array $colors = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['phone:read'])]
     private ?string $screenSize = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['phone:read'])]
     private ?string $description = null;
 
     public function getId(): ?int
