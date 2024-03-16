@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\Customer;
 use App\Entity\Phone;
 use App\Entity\User;
+use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
@@ -78,8 +79,8 @@ class AppFixtures extends Fixture
             $user->setLastname($faker->lastName);
             $user->setPhone($faker->phoneNumber);
             $user->setCustomer($this->getReference($faker->randomElement($customers)));
-            $user->setCreatedAt($faker->dateTimeBetween('-6 months'));
-            $user->setUpdatedAt($faker->dateTimeBetween('-1 months'));
+            $user->setCreatedAt(DateTimeImmutable::createFromMutable($faker->dateTime()));
+            $user->setUpdatedAt(DateTimeImmutable::createFromMutable($faker->dateTime()));
             $manager->persist($user);
         }
 
