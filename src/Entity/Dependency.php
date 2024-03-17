@@ -6,6 +6,8 @@ use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use App\DataProvider\DependencyDataProvider;
+
 #[ApiResource(
     operations: [
         new GetCollection(),
@@ -13,6 +15,7 @@ use ApiPlatform\Metadata\GetCollection;
     ],
     paginationClientEnabled: false,
     paginationEnabled: false,
+    provider: DependencyDataProvider::class
 )]
 class Dependency
 {
