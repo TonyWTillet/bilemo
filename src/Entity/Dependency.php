@@ -6,7 +6,7 @@ use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use App\DataProvider\DependencyDataProvider;
+/*use App\DataProvider\DependencyDataProvider*/;
 
 #[ApiResource(
     operations: [
@@ -15,7 +15,7 @@ use App\DataProvider\DependencyDataProvider;
     ],
     paginationClientEnabled: false,
     paginationEnabled: false,
-    provider: DependencyDataProvider::class
+    /*provider: DependencyDataProvider::class*/
 )]
 class Dependency
 {

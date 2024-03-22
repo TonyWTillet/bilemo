@@ -10,14 +10,14 @@ use App\Entity\Dependency;
 use Ramsey\Uuid\Uuid;
 
 
-final class DependencyDataProvider implements ProviderInterface
+final class DependencyDataProvider /*implements ProviderInterface*/
 {
 
     public function __construct(private readonly string $rootPath)
     {
     }
 
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
+    /*public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {
         $dependencies = $this->_readDependencies();
         if ($operation instanceof GetCollection) {
@@ -38,7 +38,7 @@ final class DependencyDataProvider implements ProviderInterface
             return null;
         }
 
-    }
+    }*/
 
     private function _readDependencies(): array
     {

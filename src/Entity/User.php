@@ -36,7 +36,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Post(
             normalizationContext: ['groups' => ['user:read:post']],
             denormalizationContext: ['groups' => ['user:post']],
-            validationContext: ['groups' => ['user:write']]
+            validationContext: ['groups' => ['user:post']]
         ),
         new Patch(
             normalizationContext: ['groups' => ['user:read:patch']],
@@ -72,11 +72,13 @@ class User implements CustomerOwnedInterface
     #[Assert\NotBlank]
     #[ORM\Column(length: 255)]
     #[Groups(['user:read', 'user:read:post', 'user:read:patch','user:patch', 'user:post'])]
+    #[Assert\NotBlank]
     private ?string $firstname = null;
 
     #[Assert\NotBlank]
     #[ORM\Column(length: 255)]
     #[Groups(['user:read', 'user:read:post', 'user:read:patch','user:patch', 'user:post'])]
+    #[Assert\NotBlank]
     private ?string $lastname = null;
 
     #[Assert\NotBlank]
