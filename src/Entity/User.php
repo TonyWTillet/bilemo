@@ -9,20 +9,16 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use mysql_xdevapi\CollectionFind;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
+use App\Validator\Constraints\UserMinimalProperties;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
@@ -53,8 +49,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiFilter(SearchFilter::class, properties: ['id' => 'exact', 'email' => 'partial', 'firstname' => 'partial', 'lastname' => 'partial'])]
 #[Broadcast]
-#[UniqueEntity('email')]
-
+#[UniqueEntity('email', message: 'This email is already used', groups: ['user:post', 'user:patch'])]
 class User implements CustomerOwnedInterface
 {
     #[ORM\Id]
@@ -69,20 +64,18 @@ class User implements CustomerOwnedInterface
     #[ApiProperty(readableLink: true, writableLink: true)]
     private ?Customer $customer = null;
 
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message: "This propertie cannot be empty", groups: ['user:post', 'user:patch'])]
     #[ORM\Column(length: 255)]
     #[Groups(['user:read', 'user:read:post', 'user:read:patch','user:patch', 'user:post'])]
-    #[Assert\NotBlank]
     private ?string $firstname = null;
 
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message: "This propertie cannot be empty", groups: ['user:post', 'user:patch'])]
     #[ORM\Column(length: 255)]
     #[Groups(['user:read', 'user:read:post', 'user:read:patch','user:patch', 'user:post'])]
-    #[Assert\NotBlank]
     private ?string $lastname = null;
 
-    #[Assert\NotBlank]
-    #[Assert\Email]
+    #[Assert\NotBlank(message: "This propertie cannot be empty", groups: ['user:post', 'user:patch'])]
+    #[Assert\Email(message: "This email is not valid", groups: ['user:post', 'user:patch'])]
     #[Groups(['user:read:collection','user:read', 'user:read:post', 'user:read:patch','user:patch', 'user:post'])]
     #[ORM\Column(length: 255, unique: true)]
     private ?string $email = null;

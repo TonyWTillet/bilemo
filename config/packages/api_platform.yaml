@@ -29,6 +29,6 @@ api_platform:
     http_cache:
         invalidation:
             enabled: true
-            varnish_urls: [ '%env(VARNISH_URL)%' ]
+            urls: []
         public: true
 
