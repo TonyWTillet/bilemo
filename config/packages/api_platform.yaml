@@ -1,6 +1,7 @@
 api_platform:
     title: BileMo API
     version: 1.0.0
+    show_webby: false
     swagger:
         api_keys:
             JWT:
@@ -17,10 +18,17 @@ api_platform:
         pagination_maximum_items_per_page: 20
         stateless: true
         cache_headers:
-            vary: ['Content-Type', 'Authorization', 'Origin']
+            max_age: 0
+            shared_max_age: 3600
+            vary: [ 'Content-Type', 'Authorization', 'Origin' ]
         extra_properties:
             standard_put: true
             rfc_7807_compliant_errors: true
     event_listeners_backward_compatibility_layer: false
     keep_legacy_inflector: false
+    http_cache:
+        invalidation:
+            enabled: true
+            urls: []
+        public: true
 
