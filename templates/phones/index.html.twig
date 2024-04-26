@@ -1,0 +1,59 @@
+{% extends 'front/base.html.twig' %}
+
+{% block title %}BileMo{% endblock %}
+
+{% block body %}
+
+    <section class="breadcrumbs">
+        <div class="container">
+
+            <ol>
+                <li><a href="{{ path('app_home') }}">Home</a></li>
+                <li>Smartphones</li>
+            </ol>
+            <h2>Smartphones List</h2>
+
+        </div>
+    </section>
+    <section id="blog" class="blog">
+        <div class="container" data-aos="fade-up">
+
+            <div class="row">
+
+                <div class="col-lg-12 entries">
+
+                    {% for phone in phones %}
+                        <article class="entry">
+
+                            <div class="entry-img">
+                                <img src="assets/img/blog/blog-1.jpg" alt="" class="img-fluid">
+                            </div>
+
+                            <h2 class="entry-title">
+                                <a>{{ phone.brand  }} - {{ phone.model }}</a>
+                            </h2>
+
+                            <div class="entry-meta">
+                                <ul>
+                                    <li class="d-flex align-items-center"><i class="bi bi-person"></i> <a>{{ phone.price }}</a></li>
+                                    <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a>{{ phone.screenSize }}</a></li>
+                                    <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a>{{ phone.colors|join(', ')  }}</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="entry-content">
+                                <p>
+                                    {{ phone.description }}
+                                </p>
+                            </div>
+
+                        </article>
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+{% endblock %}
