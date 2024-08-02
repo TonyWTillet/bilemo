@@ -30,7 +30,6 @@ class CurrentUserExtension implements QueryCollectionExtensionInterface, QueryIt
                                       array $context = []): void
     {
         $this->addWhere($resourceClass, $queryBuilder);
-
     }
 
     /**

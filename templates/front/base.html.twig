@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta lang="fr">
+    <title>{% block title %}BileMo API PLATFORM!{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    {% block stylesheets %}
+        {% block importmap %}{{ importmap('app') }}{% endblock %}
+    {% endblock %}
+</head>
+<body>
+
+    {% block header %}
+        <header id="header" class="header fixed-top">
+            <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
+
+                <a href="{{ path('app_home') }}" class="logo d-flex align-items-center">
+                    <span>BileMo</span>
+                </a>
+
+                <nav id="navbar" class="navbar">
+                    <ul>
+                        <li><a class="nav-link scrollto {% if currentUrl == '/'  %}active{% endif %}" href="{{ path('app_home') }}">Home</a></li>
+                        <li><a class="nav-link scrollto {% if path('app_phones') in currentUrl %}active{% endif %}" href="{{ path('app_phones') }}">Smartphones</a></li>
+                        <li><a class="nav-link scrollto" href="/api/docs">Documentation</a></li>
+                        <li><a class="nav-link scrollto" href="mailto:tony.tillet@gmail.com">Support</a></li>
+                    </ul>
+                    <i class="bi bi-list mobile-nav-toggle"></i>
+                </nav><!-- .navbar -->
+
+            </div>
+        </header>
+    {% endblock %}
+
+    {% block body %}
+
+    {% endblock %}
+
+
+    {% block footer %}
+        <footer id="footer" class="footer">
+            <div class="container">
+                <div class="copyright">
+                    &copy; Copyright <strong><span>BileMo</span></strong>. All Rights Reserved<br>
+                    An <strong><span>OpenClassrooms</span></strong> project for the <strong><span>PHP/Symfony Developer</span></strong> training course, focusing on building a comprehensive API with Symfony.
+                </div>
+                <div class="credits">
+                    Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+                </div>
+            </div>
+        </footer>
+    {% endblock %}
+
+    {% block javascripts %}
+        <script src="{{ asset('js/vendor/purecounter/purecounter_vanilla.js') }}"></script>
+        <script src="{{ asset('js/vendor/aos/aos.js') }}"></script>
+        <script src="{{ asset('js/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+        <script src="{{ asset('js/vendor/glightbox/js/glightbox.min.js') }}"></script>
+        <script src="{{ asset('js/vendor/isotope-layout/isotope.pkgd.min.js') }}"></script>
+        <script src="{{ asset('js/vendor/swiper/swiper-bundle.min.js') }}"></script>
+        <script src="{{ asset('js/vendor/php-email-form/validate.js') }}"></script>
+
+        <!-- Template Main JS File -->
+        <script src="{{ asset('js/main.js') }}"></script>
+    {% endblock %}
+</body>
+</html>
