@@ -78,24 +78,19 @@ https://getcomposer.org/download/
 <table>
     <thead>
         <tr>
-            <th>pseudo</th>
+            <th>email</th>
             <th align="center">password</th>
             <th align="right">role</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td>user@gmail.com</td>
-            <td align="center">openclassrooms-P7</td>
+            <td>victoire.raymond@delorme.com</td>
+            <td align="center">password</td>
             <td align="right">ROLE_USER</td>
-        </tr>
-        <tr>
-            <td>admin@gmail.com</td>
-            <td align="center">openclassrooms-P7</td>
-            <td align="right">ROLE_ADMIN</td>
         </tr>
     </tbody>
 </table>
 
 # UML DIAGRAMM
-[Diagrammes UML](doagrams_UML/)
+[Diagrammes UML](./diagrams_UML)
