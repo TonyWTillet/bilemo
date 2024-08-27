@@ -24,6 +24,9 @@ api_platform:
             max_age: 0
             shared_max_age: 3600
             vary: [ 'Content-Type', 'Authorization', 'Origin' ]
+            invalidation:
+                xkey:
+                    glue: ', '
         extra_properties:
             standard_put: true
             rfc_7807_compliant_errors: true
@@ -32,6 +35,6 @@ api_platform:
     http_cache:
         invalidation:
             enabled: true
-            urls: []
+            purger: 'api_platform.http_cache.purger.varnish.xkey'
         public: true
 
